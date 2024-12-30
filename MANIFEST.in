@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+include requirements.txt
+recursive-include monegros/data *.csv
+recursive-include monegros/img *.png

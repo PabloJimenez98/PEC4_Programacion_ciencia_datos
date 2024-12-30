@@ -1,0 +1,11 @@
+LICENSE
+MANIFEST.in
+README.md
+requirements.txt
+setup.py
+monegros_analysis.egg-info/PKG-INFO
+monegros_analysis.egg-info/SOURCES.txt
+monegros_analysis.egg-info/dependency_links.txt
+monegros_analysis.egg-info/entry_points.txt
+monegros_analysis.egg-info/requires.txt
+monegros_analysis.egg-info/top_level.txt

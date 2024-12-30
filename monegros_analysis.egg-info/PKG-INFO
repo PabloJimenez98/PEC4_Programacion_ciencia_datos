@@ -1,0 +1,143 @@
+Metadata-Version: 2.1
+Name: monegros-analysis
+Version: 1.0.0
+Summary: Análisis de datos de la carrera Orbea Monegros 2024
+Home-page: https://github.com/[tu-usuario]/monegros-analysis
+Author: Pablo Jimenez Cruz
+Author-email: pjimenezcr@uoc.edu
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Education
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: colorama==0.4.6
+Requires-Dist: contourpy==1.3.1
+Requires-Dist: cycler==0.12.1
+Requires-Dist: Faker==33.1.0
+Requires-Dist: fonttools==4.55.3
+Requires-Dist: iniconfig==2.0.0
+Requires-Dist: kiwisolver==1.4.8
+Requires-Dist: matplotlib==3.10.0
+Requires-Dist: numpy==2.2.1
+Requires-Dist: packaging==24.2
+Requires-Dist: pandas==2.2.3
+Requires-Dist: pillow==11.0.0
+Requires-Dist: pluggy==1.5.0
+Requires-Dist: pyparsing==3.2.0
+Requires-Dist: pytest==8.3.4
+Requires-Dist: python-dateutil==2.9.0.post0
+Requires-Dist: pytz==2024.2
+Requires-Dist: setuptools==75.6.0
+Requires-Dist: six==1.17.0
+Requires-Dist: typing_extensions==4.12.2
+Requires-Dist: tzdata==2024.2
+
+# Orbea Monegros 2024 - Data Analysis
+
+Este proyecto es el entregable de la PEC4 de la asignatura "Programación para la Ciencia de Datos" del Máster Universitario en Ciencia de Datos de la UOC. El proyecto analiza los datos de la prueba de ciclismo Orbea Monegros 2024, incluyendo análisis de participantes, tiempos y clubs ciclistas.
+
+## Estructura del Proyecto
+
+```
+monegros/
+├── data/
+│   └── dataset.csv
+├── img/
+│   └── histograma.png
+├── src/
+│   ├── __init__.py
+│   ├── ex1_data.py
+│   ├── ex2_anonymize.py
+│   ├── ex3_histogram.py
+│   ├── ex4_clubs.py
+│   └── ex5_ucsc.py
+├── tests/
+│   ├── __init__.py
+│   ├── test_ex1.py
+│   ├── test_ex2.py
+│   ├── test_ex3.py
+│   ├── test_ex4.py
+│   └── test_ex5.py
+├── main.py
+├── README.md
+├── LICENSE
+└── requirements.txt
+```
+
+## Requisitos
+
+1. Activar el entorno virtual:
+```bash
+.\PEC4\Scripts\activate
+```
+
+2. Instalar las dependencias necesarias:
+```bash
+pip install -r requirements.txt
+```
+
+## Uso
+
+### Ejecutar todos los ejercicios:
+
+```bash
+python main.py
+```
+
+### Ejecutar un ejercicio específico:
+
+```bash
+python main.py --exercise 1  # Para ejecutar solo el ejercicio 1
+```
+
+## Ejercicios
+
+1. **Importación y EDA**: Carga inicial de datos y análisis exploratorio.
+2. **Anonimización**: Protección de datos personales y limpieza.
+3. **Análisis de Tiempos**: Histograma de tiempos agrupados.
+4. **Análisis de Clubs**: Estandarización y análisis de clubs ciclistas.
+5. **Análisis UCSC**: Estudio específico del club UCSC.
+
+## Tests
+
+### Ejecutar todos los tests:
+
+```bash
+pytest
+```
+
+### Ejecutar tests de un ejercicio específico:
+
+```bash
+pytest tests/test_ex1.py  # Para el ejercicio 1
+```
+
+### Verificar cobertura:
+
+```bash
+pytest --cov=src tests/
+```
+
+### Verificar estilo de código:
+
+```bash
+pylint src/*.py
+```
+
+## Estructura de Datos
+
+El archivo CSV contiene las siguientes columnas:
+- dorsal: Número de dorsal del ciclista
+- biker: Nombre del ciclista
+- club: Club ciclista
+- time: Tiempo de finalización (formato HH:MM:SS)
+
+## Autor
+
+Pablo Jiménez Cruz
