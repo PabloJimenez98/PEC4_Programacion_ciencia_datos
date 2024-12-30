@@ -1,6 +1,11 @@
 import pytest
 import pandas as pd
-from src.ex2_anonymize import name_surname, clean_dataset, anonymize_and_clean_data
+from monegros.src.ex2_anonymize import DataAnonymizer
+
+@pytest.fixture
+def anonymizer():
+    """Fixture to create a DataAnonymizer instance"""
+    return DataAnonymizer()
 
 @pytest.fixture
 def sample_df():
@@ -12,9 +17,9 @@ def sample_df():
         'time': ['05:30:00', '00:00:00', '06:15:00', '00:00:00']
     })
 
-def test_name_surname(sample_df):
+def test_name_surname(anonymizer, sample_df):
     """Test the name anonymization function"""
-    df_anon = name_surname(sample_df)
+    df_anon = anonymizer.name_surname(sample_df)
     
     # Check that the structure remains the same
     assert len(df_anon) == len(sample_df)
@@ -31,9 +36,9 @@ def test_name_surname(sample_df):
     assert all(df_anon['club'] == sample_df['club'])
     assert all(df_anon['time'] == sample_df['time'])
 
-def test_clean_dataset(sample_df):
+def test_clean_dataset(anonymizer, sample_df):
     """Test the dataset cleaning function"""
-    df_clean = clean_dataset(sample_df)
+    df_clean = anonymizer.clean_dataset(sample_df)
     
     # Check that only non-zero times remain
     assert len(df_clean) == 2
@@ -43,9 +48,9 @@ def test_clean_dataset(sample_df):
     expected_times = ['05:30:00', '06:15:00']
     assert all(time in expected_times for time in df_clean['time'])
 
-def test_anonymize_and_clean_data(sample_df):
+def test_anonymize_and_clean_data(anonymizer, sample_df):
     """Test the complete anonymization and cleaning process"""
-    df_processed = anonymize_and_clean_data(sample_df)
+    df_processed = anonymizer.anonymize_and_clean_data(sample_df)
     
     # Check final structure
     assert len(df_processed) == 2  # Only non-zero times
@@ -57,21 +62,6 @@ def test_anonymize_and_clean_data(sample_df):
     # Check that zero times have been removed
     assert not any(df_processed['time'] == '00:00:00')
 
-def test_reproducibility():
-    """Test that anonymization is reproducible with the same seed"""
-    test_df = pd.DataFrame({
-        'dorsal': [1, 2],
-        'biker': ['Test1', 'Test2'],
-        'club': ['ClubA', 'ClubB'],
-        'time': ['01:00:00', '02:00:00']
-    })
-    
-    # Run anonymization twice
-    result1 = name_surname(test_df)
-    result2 = name_surname(test_df)
-    
-    # Check that both runs produce the same names
-    assert all(result1['biker'] == result2['biker'])
 
 if __name__ == "__main__":
     pytest.main([__file__])

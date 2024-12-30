@@ -1,6 +1,11 @@
 import pytest
 import pandas as pd
-from src.ex4_clubs import clean_club, analyze_clubs
+from monegros.src.ex4_clubs import ClubAnalyzer
+
+@pytest.fixture
+def club_analyzer():
+    """Fixture to create a ClubAnalyzer instance"""
+    return ClubAnalyzer()
 
 @pytest.fixture
 def sample_df():
@@ -20,7 +25,7 @@ def sample_df():
         'time': ['05:00:00' for _ in range(7)]
     })
 
-def test_clean_club_basic():
+def test_clean_club_basic(club_analyzer):
     """Test basic club name cleaning"""
     test_cases = [
         ('C.C. Huesca', 'HUESCA'),
@@ -31,9 +36,9 @@ def test_clean_club_basic():
     ]
     
     for input_name, expected_output in test_cases:
-        assert clean_club(input_name) == expected_output
+        assert club_analyzer.clean_club(input_name) == expected_output
 
-def test_clean_club_edge_cases():
+def test_clean_club_edge_cases(club_analyzer):
     """Test edge cases for club cleaning"""
     test_cases = [
         (None, 'INDEPENDIENTE'),
@@ -43,9 +48,9 @@ def test_clean_club_edge_cases():
     ]
     
     for input_name, expected_output in test_cases:
-        assert clean_club(input_name) == expected_output
+        assert club_analyzer.clean_club(input_name) == expected_output
 
-def test_clean_club_complex_cases():
+def test_clean_club_complex_cases(club_analyzer):
     """Test more complex club name cleaning scenarios"""
     test_cases = [
         ('C.C. Test C.C.', 'TEST'),
@@ -55,11 +60,11 @@ def test_clean_club_complex_cases():
     ]
     
     for input_name, expected_output in test_cases:
-        assert clean_club(input_name) == expected_output
+        assert club_analyzer.clean_club(input_name) == expected_output
 
-def test_analyze_clubs(sample_df):
+def test_analyze_clubs(club_analyzer, sample_df):
     """Test club analysis functionality"""
-    df_result = analyze_clubs(sample_df)
+    df_result = club_analyzer.analyze_clubs(sample_df)
     
     # Check that club_clean column was added
     assert 'club_clean' in df_result.columns
@@ -74,9 +79,9 @@ def test_analyze_clubs(sample_df):
     # Check that original data wasn't modified
     assert 'club_clean' not in sample_df.columns
 
-def test_club_summary_structure(sample_df):
+def test_club_summary_structure(club_analyzer, sample_df):
     """Test the structure of the club summary"""
-    df_result = analyze_clubs(sample_df)
+    df_result = club_analyzer.analyze_clubs(sample_df)
     
     # Get unique clubs
     unique_clubs = df_result['club_clean'].value_counts()

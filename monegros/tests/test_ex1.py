@@ -1,12 +1,17 @@
 import pytest
 import pandas as pd
 from pathlib import Path
-from src.ex1_data import load_and_analyze_data
+from monegros.src.ex1_data import DataLoader
 
-def test_load_and_analyze_data():
+@pytest.fixture
+def data_loader():
+    """Fixture to create a DataLoader instance"""
+    return DataLoader()
+
+def test_load_and_analyze_data(data_loader):
     """Test the data loading and analysis function"""
     # Execute the function
-    df = load_and_analyze_data()
+    df = data_loader.load_and_analyze_data()
     
     # Test that we get a DataFrame back
     assert isinstance(df, pd.DataFrame)
@@ -31,21 +36,20 @@ def test_load_and_analyze_data():
     
     assert all(df['time'].apply(is_time_format))
 
-def test_file_not_found():
+def test_file_not_found(data_loader):
     """Test that appropriate error is raised when file is not found"""
     # Temporarily rename the data file to simulate missing file
-    root_dir = Path(__file__).parent.parent
-    data_path = root_dir / 'data' / 'dataset.csv'
-    temp_path = root_dir / 'data' / 'dataset.csv.bak'
+    original_path = data_loader.data_path
+    temp_path = original_path.parent / 'dataset.csv.bak'
     
-    if data_path.exists():
-        data_path.rename(temp_path)
+    if original_path.exists():
+        original_path.rename(temp_path)
         
         with pytest.raises(FileNotFoundError):
-            load_and_analyze_data()
+            data_loader.load_and_analyze_data()
             
         # Restore the file
-        temp_path.rename(data_path)
+        temp_path.rename(original_path)
 
 if __name__ == "__main__":
     pytest.main([__file__])

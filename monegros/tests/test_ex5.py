@@ -1,6 +1,11 @@
 import pytest
 import pandas as pd
-from src.ex5_ucsc import analyze_ucsc
+from monegros.src.ex5_ucsc import UCSCAnalyzer
+
+@pytest.fixture
+def ucsc_analyzer():
+    """Fixture to create a UCSCAnalyzer instance"""
+    return UCSCAnalyzer()
 
 @pytest.fixture
 def sample_df():
@@ -12,9 +17,9 @@ def sample_df():
         'time': ['05:30:00', '05:15:00', '05:00:00', '05:45:00', '05:20:00', '06:00:00']
     })
 
-def test_analyze_ucsc_basic(sample_df):
+def test_analyze_ucsc_basic(ucsc_analyzer, sample_df):
     """Test basic UCSC analysis functionality"""
-    ucsc_df, best_time_df, position_info = analyze_ucsc(sample_df)
+    ucsc_df, best_time_df, position_info = ucsc_analyzer.analyze_ucsc(sample_df)
     
     # Check UCSC cyclists extraction
     assert len(ucsc_df) == 3
@@ -29,7 +34,7 @@ def test_analyze_ucsc_basic(sample_df):
     assert position_info['total'] == 6
     assert position_info['percentage'] == pytest.approx(16.67, rel=0.01)
 
-def test_analyze_ucsc_no_cyclists():
+def test_analyze_ucsc_no_cyclists(ucsc_analyzer):
     """Test analysis when no UCSC cyclists are present"""
     df = pd.DataFrame({
         'dorsal': [1, 2],
@@ -38,13 +43,13 @@ def test_analyze_ucsc_no_cyclists():
         'time': ['05:00:00', '05:30:00']
     })
     
-    ucsc_df, best_time_df, position_info = analyze_ucsc(df)
+    ucsc_df, best_time_df, position_info = ucsc_analyzer.analyze_ucsc(df)
     
     assert len(ucsc_df) == 0
     assert best_time_df is None
     assert position_info is None
 
-def test_analyze_ucsc_missing_column():
+def test_analyze_ucsc_missing_column(ucsc_analyzer):
     """Test error handling when club_clean column is missing"""
     df = pd.DataFrame({
         'dorsal': [1],
@@ -53,23 +58,23 @@ def test_analyze_ucsc_missing_column():
     })
     
     with pytest.raises(ValueError, match="DataFrame must include 'club_clean' column"):
-        analyze_ucsc(df)
+        ucsc_analyzer.analyze_ucsc(df)
 
-def test_analyze_ucsc_single_cyclist(sample_df):
+def test_analyze_ucsc_single_cyclist(ucsc_analyzer, sample_df):
     """Test analysis with only one UCSC cyclist"""
     # Keep only one UCSC cyclist
     df_single = sample_df.copy()
     df_single.loc[df_single['club_clean'] == 'UCSC', 'club_clean'] = 'OTHER'
     df_single.loc[2, 'club_clean'] = 'UCSC'  # Keep only one UCSC cyclist
     
-    ucsc_df, best_time_df, position_info = analyze_ucsc(df_single)
+    ucsc_df, best_time_df, position_info = ucsc_analyzer.analyze_ucsc(df_single)
     
     assert len(ucsc_df) == 1
     assert best_time_df['biker'] == 'Biker3'
     assert position_info['position'] == 1
     assert position_info['total'] == 6
 
-def test_analyze_ucsc_tied_times():
+def test_analyze_ucsc_tied_times(ucsc_analyzer):
     """Test analysis when there are tied times"""
     df = pd.DataFrame({
         'dorsal': range(1, 5),
@@ -78,7 +83,7 @@ def test_analyze_ucsc_tied_times():
         'time': ['05:00:00', '05:00:00', '05:30:00', '06:00:00']
     })
     
-    ucsc_df, best_time_df, position_info = analyze_ucsc(df)
+    ucsc_df, best_time_df, position_info = ucsc_analyzer.analyze_ucsc(df)
     
     assert len(ucsc_df) == 2
     assert best_time_df['time'] == '05:00:00'

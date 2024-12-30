@@ -95,12 +95,12 @@ pytest
 
 ### Ejecutar tests de un ejercicio específico:
 ```bash
-pytest tests/test_ex1.py  # Para el ejercicio 1
+pytest monegros/tests/test_ex1.py  # Para el ejercicio 1
 ```
 
 ### Verificar cobertura:
 ```bash
-pytest --cov=src tests/
+pytest --cov=monegros.src monegros\tests\
 ```
 
 ### Verificar estilo de código:
